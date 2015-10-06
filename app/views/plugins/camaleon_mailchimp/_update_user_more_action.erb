@@ -1,0 +1,125 @@
+<div class="col-md-3">
+  <div class="panel panel-default panel-lite plugin-panel-user-tags">
+    <div class="panel-heading">
+      <h3 class="panel-title">Mailchimp</h3>
+      <ul class="panel-controls">
+        <li><a href="#" class="panel-collapse"><span class="fa fa-angle-down"></span></a></li>
+      </ul>
+    </div>
+    <div class="panel-body ">
+      <div class="form-group" style="margin-left: 0; margin-right: 0">
+        <label class="col-md-4 col-xs-5 control-label"><%= t('admin.table.registration') %></label>
+
+        <div class="col-md-8 col-xs-7">
+          <% if !@user.the_newsletter_subscribed? %>
+              <a href="#" class="btn btn-success btn-block" data-toggle="modal" data-target="#modal_plugin_mailchimp_subscribe">
+                <%= t('admin.plugin.mailchimp.subscribe') %>
+              </a>
+          <% else %>
+              <a href="#" class="btn btn-danger btn-block" data-toggle="modal" data-target="#modal_plugin_mailchimp_unsubscribe">
+                <%= t('admin.plugin.mailchimp.unsubscribe') %>
+              </a>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal animated fadeIn" id="modal_plugin_mailchimp_subscribe" tabindex="-1" role="dialog" aria-labelledby="smallModalHead" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">
+          <span aria-hidden="true">&times;</span><span class="sr-only"><%= t('admin.button.close') %></span></button>
+        <h4 class="modal-title" id="smallModalHead"><%= t('admin.button.subscribe_user') %></h4>
+      </div>
+      <div class="modal-body">
+        <p><%= t('admin.message.suscribe') %></p>
+        <%= form_for @user, url: @user.new_record? ? admin_users_path : admin_plugins_camaleon_mailchimp_subscribe_path(@user), html: {class: 'form-ajax-mailchimp-subscribe'} do |f| %>
+            <div class="modal-body form-horizontal form-group-separated">
+              <div class="form-group">
+                <label class="col-md-3 control-label"><%= t('admin.table.old_password') %></label>
+
+                <div class="col-md-9">
+                  <input type="password" class="form-control required" name="password[password_old]"/>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button type="submit" class="btn btn-danger mailchimp-subscribe-btn"><%= t('admin.button.proccess') %></button>
+                <button type="button" class="btn btn-default" data-dismiss="modal"><%= t('admin.button.close') %></button>
+              </div>
+            </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal animated fadeIn" id="modal_plugin_mailchimp_unsubscribe" tabindex="-1" role="dialog" aria-labelledby="smallModalHead" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">
+          <span aria-hidden="true">&times;</span><span class="sr-only"><%= t('admin.button.close') %></span></button>
+        <h4 class="modal-title" id="smallModalHead"><%= t('admin.button.subscribe_user') %></h4>
+      </div>
+      <div class="modal-body">
+        <p><%= t('admin.message.suscribe') %></p>
+        <%= form_for @user, url: @user.new_record? ? admin_users_path : admin_plugins_camaleon_mailchimp_unsubscribe_path(@user), html: {class: 'form-ajax-mailchimp-unsubscribe'} do |f| %>
+            <div class="modal-body form-horizontal form-group-separated">
+              <div class="modal-footer">
+                <button type="submit" class="btn btn-danger"><%= t('admin.button.proccess') %></button>
+                <button type="button" class="btn btn-default" data-dismiss="modal"><%= t('admin.button.close') %></button>
+              </div>
+            </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<% add_asset_library('form_ajax', 'cropper') %>
+
+<script>
+  jQuery(function ($) {
+    $('.form-ajax-mailchimp-subscribe').ajaxForm({
+      success: function (res) {
+        if (res.errors) {
+          $.fn.alert({
+            type: 'error',
+            title: lang.msg_form_error,
+            content: res.errors,
+            icon: 'times',
+            close: lang.close
+          });
+        } else {
+          $.fn.alert({title: lang.message_updated_success, close: lang.close});
+          $("#modal_plugin_mailchimp_subscribe").modal('hide');
+          //FIXME on close alert. Reload!!!
+          //window.location.reload();
+        }
+      }
+    });
+
+    $('.form-ajax-mailchimp-unsubscribe').ajaxForm({
+      success: function (res) {
+        if (res.errors) {
+          $.fn.alert({
+            type: 'error',
+            title: lang.msg_form_error,
+            content: res.errors,
+            icon: 'times',
+            close: lang.close
+          });
+        } else {
+          $.fn.alert({title: lang.message_updated_success, close: lang.close});
+          $("#modal_plugin_mailchimp_unsubscribe").modal('hide');
+          //FIXME on close alert. Reload!!!
+          //window.location.reload();
+        }
+      }
+    });
+
+  });
+</script>

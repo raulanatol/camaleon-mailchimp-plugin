@@ -1,0 +1,21 @@
+en:
+  plugin:
+    mailchimp:
+      settings:
+        link_name: 'Settings'
+      user:
+        newsletter_subscribed: 'Subscribed'
+        newsletter_enabled_at: 'From:'
+      messages:
+        settings_saved: 'Settings saved!'
+
+es:
+  plugin:
+    mailchimp:
+      settings:
+        link_name: 'Preferencias'
+      user:
+        newsletter_subscribed: 'Suscrito'
+        newsletter_enabled_at: 'Desde:'
+      messages:
+        settings_saved: '¡Preferencias guardadas!'

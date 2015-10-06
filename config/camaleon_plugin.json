@@ -1,0 +1,42 @@
+{
+  "title": "Mailchimp",
+  "descr": "",
+  "version": "0.1",
+  "key": "camaleon_mailchimp",
+  "helpers": [
+    "Plugins::CamaleonMailchimp::MainHelper"
+  ],
+  "options": [
+    {
+      "label": "Settings",
+      "url": "admin_plugins_camaleon_mailchimp_settings_path",
+      "eval_url": true
+    }
+  ],
+  "hooks": {
+    "on_active": [
+      "camaleon_mailchimp_on_active"
+    ],
+    "on_inactive": [
+      "camaleon_mailchimp_on_inactive"
+    ],
+    "on_upgrade": [
+      "camaleon_mailchimp_on_upgrade"
+    ],
+    "plugin_options": [
+      "camaleon_mailchimp_plugin_options"
+    ],
+    "user_after_register": [
+      "mailchimp_user_after_register"
+    ],
+    "user_register_form": [
+      "mailchimp_user_register_form"
+    ],
+    "user_after_update": [
+      "mailchimp_user_after_update"
+    ],
+    "user_update_more_actions": [
+      "mailchimp_user_update_more_actions"
+    ]
+  }
+}
