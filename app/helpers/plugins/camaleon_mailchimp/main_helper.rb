@@ -38,7 +38,7 @@ module Plugins::CamaleonMailchimp::MainHelper
   def mailchimp_user_after_register(plugin)
     if params[:user][:newsletter_enabled] == '1'
       user = plugin[:user]
-      user.mailchimp_subscribe_newsletter!
+      user.mailchimp_subscribe!
     end
   end
 
@@ -50,6 +50,7 @@ module Plugins::CamaleonMailchimp::MainHelper
       new_group = group.create({name: 'Mailchimp user data', slug: 'plugin_mailchimp_user_data', description: 'Mailchimp newsletter user subscription data'})
       new_group.add_field({:name => "t('plugin.mailchimp.user.newsletter_subscribed')", :slug => 'mailchimp_newsletter_subscribed'}, {field_key: 'checkbox', default_value: false})
       new_group.add_field({:name => "t('plugin.mailchimp.user.newsletter_enabled_at')", :slug => 'mailchimp_newsletter_enabled_at'}, {field_key: 'date'})
+      new_group.add_field({:name => "t('plugin.mailchimp.user.member_id')", :slug => 'mailchimp_member_id'}, {field_key: 'text_box'})
     end
   end
 end

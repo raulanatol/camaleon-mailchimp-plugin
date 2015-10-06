@@ -3,12 +3,38 @@ en:
     mailchimp:
       settings:
         link_name: 'Settings'
+        title: "Mailchimp plugin"
       user:
         newsletter_subscribed: 'Subscribed'
         newsletter_enabled_at: 'From:'
       messages:
         settings_saved: 'Settings saved!'
-
+      modal:
+        unsubscribe:
+          title: "Unsubscribe user"
+          body: "Are you sure?"
+          submit: "Unsubscribe"
+        subscribe:
+          submit: "Subscribe"
+          body: "Are you sure?"
+          title: "Subscribe user"
+      form:
+        api_key: "API Key"
+        list_id: "List ID"
+        subscribe: "Subscribe"
+        unsubscribe: "Unsubscribe"
+      success:
+        subscribe:
+          title: "User subscribed"
+        unsubscribe:
+          title: "User unsubscribed"
+      error:
+        subscribe:
+          title: "Error when subscribing to Mailchimp"
+        unsubscribe:
+         title: "Error when unsubscribing to Mailchimp"
+         message: "An error has occurred to do subscription"
+      close: "Close"
 es:
   plugin:
     mailchimp:

@@ -17,7 +17,7 @@ Rails.application.routes.draw do
         post 'settings' => 'admin#save_settings'
 
         patch ':user_id/subscribe' => 'admin#subscribe', :as => 'subscribe'
-        patch 'unsubscribe' => 'admin#unsubscribe'
+        patch ':user_id/unsubscribe' => 'admin#unsubscribe', :as => 'unsubscribe'
       end
     end
   end

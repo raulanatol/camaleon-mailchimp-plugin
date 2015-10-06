@@ -8,8 +8,8 @@ class Plugins::CamaleonMailchimp::AdminController < Apps::PluginsAdminController
   def save_settings
     current_site.set_meta('mailchimp_config',
                           {
-                              api_key: params[:mailchimp][:api_key],
-                              list_id: params[:mailchimp][:list_id]
+                            api_key: params[:mailchimp][:api_key],
+                            list_id: params[:mailchimp][:list_id]
                           })
     flash[:notice] = "#{t('plugin.mailchimp.messages.settings_saved')}"
     redirect_to action: :settings
@@ -18,12 +18,44 @@ class Plugins::CamaleonMailchimp::AdminController < Apps::PluginsAdminController
 
   def subscribe
     user = current_site.users.find(params[:user_id])
-    user.mailchimp_subscribe_newsletter!
-    render json: {message: 'update'}
+    error = user.mailchimp_subscribe!
+    if error.nil?
+      result = {
+        message: {
+          title: t('plugin.mailchimp.success.subscribe.title'),
+          close: t('plugin.mailchimp.close'),
+        }
+      }
+    else
+      result = {
+        errors: {
+          title: error[:title],
+          msg: error[:message],
+          close: t('plugin.mailchimp.close'),
+        }
+      }
+    end
+    render json: result
   end
 
   def unsubscribe
-    param[:user].mailchimp_unsubscribe_newsletter!
-    render json: {message: 'update'}
+    user = current_site.users.find(params[:user_id])
+    if user.mailchimp_unsubscribe!
+      result = {
+        message: {
+          title: t('plugin.mailchimp.success.unsubscribe.title'),
+          close: t('plugin.mailchimp.close'),
+        }
+      }
+    else
+      result = {
+        errors: {
+          title: t('plugin.mailchimp.error.unsubscribe.title'),
+          msg: t('plugin.mailchimp.error.unsubscribe.message'),
+          close: t('plugin.mailchimp.close'),
+        }
+      }
+    end
+    render json: result
   end
 end
