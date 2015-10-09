@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
   s.version = CamaleonMailchimp::VERSION
   s.authors = ['Raúl Anatol']
   s.email = ['raul@natol.es']
-  s.homepage = ''
+  s.homepage = 'http://camaleon.tuzitio.com/store/plugins/14'
   s.summary = ': Summary of CamaleonMailchimp.'
   s.description = ': Description of CamaleonMailchimp.'
   s.license = 'MIT'
