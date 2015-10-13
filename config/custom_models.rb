@@ -46,16 +46,13 @@ User.class_eval do
 
   def mailchimp_unsubscribe!
     begin
-      body_value = {
-        status: 'unsubscribed'
-      }
       plugin_config = current_site.get_meta('mailchimp_config')
       mailchimp_api_key = plugin_config[:api_key]
       list_id = plugin_config[:list_id]
       member_id = the_mailchimp_member_id
       Rails.logger.info "[Mailchimp plugin] Start unsubscribe list: #{list_id} api: #{mailchimp_api_key} member_id: #{member_id}"
-      gibbon = Gibbon::Request.new(api_key: mailchimp_api_key)
-      gibbon.lists(list_id).members(member_id).update(body: body_value)
+      gibbon = Gibbon::API.new(mailchimp_api_key)
+      gibbon.lists.unsubscribe(:id => list_id, :email => {:email => email}, :send_notify => true)
       mailchimp_update_unsubscription_values!
     rescue Gibbon::MailChimpError => exception
       Rails.logger.error "[Mailchimp plugin error] exception: #{exception} title: #{exception.title} detail: #{exception.detail} body: #{exception.body}"
@@ -80,31 +77,10 @@ User.class_eval do
     plugin_config = current_site.get_meta('mailchimp_config')
     mailchimp_api_key = plugin_config[:api_key]
     list_id = plugin_config[:list_id]
-    gibbon = Gibbon::Request.new(api_key: mailchimp_api_key)
-    gibbon.lists(list_id).members.create(body: body_value)
+    gibbon = Gibbon::API.new(mailchimp_api_key)
+    # gibbon.lists(list_id).members.create(body: body_value)
+    gibbon.lists.subscribe({:id => list_id, :email => {:email => email}, :merge_vars => {:FNAME => meta[:first_name], :LNAME => meta[:last_name]}})
   end
-
-  #
-  # def mailchimp_api_update_subscription
-  #   begin
-  #     body_value = {
-  #       email_address: email,
-  #       status: 'subscribed',
-  #       merge_fields: {
-  #         FNAME: meta[:first_name],
-  #         LNAME: meta[:last_name]
-  #       }
-  #     }
-  #     plugin_config = current_site.get_meta('mailchimp_config')
-  #     mailchimp_api_key = plugin_config[:api_key]
-  #     list_id = plugin_config[:list_id]
-  #     gibbon = Gibbon::Request.new(api_key: mailchimp_api_key)
-  #     gibbon.lists(list_id).members(mem).update(body: body_value)
-  #   rescue Gibbon::MailChimpError => exception
-  #     Rails.logger.error "[Mailchimp plugin error] exception: #{exception} title: #{exception.title} detail: #{exception.detail} body: #{exception.body}"
-  #     nil
-  #   end
-  # end
 
   def mailchimp_update_unsubscription_values!
     update_mailchimp_values(0, '', '')
