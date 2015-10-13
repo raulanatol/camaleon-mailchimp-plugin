@@ -7,7 +7,7 @@ require 'camaleon_mailchimp/version'
 Gem::Specification.new do |s|
   s.name = 'camaleon_mailchimp'
   s.version = CamaleonMailchimp::VERSION
-  s.authors = ['Raúl Anatol']
+  s.authors = ['raulanatol']
   s.email = ['raul@natol.es']
   s.homepage = 'http://camaleon.tuzitio.com/store/plugins/14'
   s.summary = ': Summary of CamaleonMailchimp.'
