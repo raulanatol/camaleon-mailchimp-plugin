@@ -42,6 +42,33 @@ module Plugins::CamaleonMailchimp::MainHelper
     end
   end
 
+  def subscribe_hook(hook_data)
+    subscription_date = hook_data[:fired_at]
+    extra_data = hook_data[:data]
+    extra_data[:list_id]
+    extra_data[:email]
+    if extra_data[:list_id] == the_mailchimp_list_id
+      user = User.find_by_email(extra_data[:email])
+      user.update_mailchimp_values(1, subscription_date, '')
+    end
+  end
+
+  def unsubscribe_hook(hook_data)
+    extra_data = hook_data[:data]
+    user = User.find_by_email(extra_data[:email])
+    user.mailchimp_unsubscribe!(extra_data[:list_id]) unless user.nil?
+  end
+
+  # Equals that unsubscribe hook
+  def user_cleaned_hook(hook_data)
+    unsubscribe_hook(hook_data)
+  end
+
+  def the_mailchimp_list_id
+    plugin_config = current_site.get_meta('mailchimp_config')
+    plugin_config[:list_id]
+  end
+
   private
 
   def generate_custom_field_newsletter

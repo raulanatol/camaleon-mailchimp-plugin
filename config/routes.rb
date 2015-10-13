@@ -5,6 +5,7 @@ Rails.application.routes.draw do
     namespace :plugins do
       namespace 'camaleon_mailchimp' do
         get 'index' => 'front#index'
+        post 'hooks' => 'front#hook'
       end
     end
   end

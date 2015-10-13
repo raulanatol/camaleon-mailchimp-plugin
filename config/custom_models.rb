@@ -11,6 +11,7 @@ User.class_eval do
   end
 
   def the_mailchimp_member_id
+
     self.get_field_value('mailchimp_member_id').to_s
   end
 
@@ -44,15 +45,15 @@ User.class_eval do
     end
   end
 
-  def mailchimp_unsubscribe!
+  def mailchimp_unsubscribe!(list_id = nil)
     begin
       plugin_config = current_site.get_meta('mailchimp_config')
       mailchimp_api_key = plugin_config[:api_key]
-      list_id = plugin_config[:list_id]
+      mailchimp_list_id = list_id.nil? ? plugin_config[:list_id] : list_id
       member_id = the_mailchimp_member_id
-      Rails.logger.info "[Mailchimp plugin] Start unsubscribe list: #{list_id} api: #{mailchimp_api_key} member_id: #{member_id}"
+      Rails.logger.info "[Mailchimp plugin] Start unsubscribe list: #{mailchimp_list_id} api: #{mailchimp_api_key} member_id: #{member_id}"
       gibbon = Gibbon::API.new(mailchimp_api_key)
-      gibbon.lists.unsubscribe(:id => list_id, :email => {:email => email}, :send_notify => true)
+      gibbon.lists.unsubscribe(:id => mailchimp_list_id, :email => {:email => email}, :send_notify => true)
       mailchimp_update_unsubscription_values!
     rescue Gibbon::MailChimpError => exception
       Rails.logger.error "[Mailchimp plugin error] exception: #{exception} title: #{exception.title} detail: #{exception.detail} body: #{exception.body}"
@@ -61,6 +62,21 @@ User.class_eval do
       Rails.logger.warn "[Mailchimp plugin] Error trying to unsubscribe an new user: #{id} - Error: #{exception}"
       false
     end
+  end
+
+  def update_mailchimp_values(subscribed, enabled_at, member_id)
+    field_groups = self.get_user_field_groups(current_site).where({:slug => 'plugin_mailchimp_user_data'}).first
+    field_newsletter_subscribed = field_groups.get_field('mailchimp_newsletter_subscribed')
+    field_newsletter_enabled_at = field_groups.get_field('mailchimp_newsletter_enabled_at')
+    field_member_id = field_groups.get_field('mailchimp_member_id')
+
+    values_to_save = {
+      :mailchimp_newsletter_subscribed => {id: field_newsletter_subscribed.id, values: [subscribed]},
+      :mailchimp_newsletter_enabled_at => {id: field_newsletter_enabled_at.id, values: [enabled_at]},
+      :mailchimp_member_id => {id: field_member_id.id, values: [member_id]}
+    }
+
+    set_field_values(values_to_save)
   end
 
   private
@@ -88,22 +104,6 @@ User.class_eval do
 
   def mailchimp_update_subscription_values!(new_member)
     update_mailchimp_values(1, Time.zone.now, new_member['id'])
-  end
-
-
-  def update_mailchimp_values(subscribed, enabled_at, member_id)
-    field_groups = self.get_user_field_groups(current_site).where({:slug => 'plugin_mailchimp_user_data'}).first
-    field_newsletter_subscribed = field_groups.get_field('mailchimp_newsletter_subscribed')
-    field_newsletter_enabled_at = field_groups.get_field('mailchimp_newsletter_enabled_at')
-    field_member_id = field_groups.get_field('mailchimp_member_id')
-
-    values_to_save = {
-      :mailchimp_newsletter_subscribed => {id: field_newsletter_subscribed.id, values: [subscribed]},
-      :mailchimp_newsletter_enabled_at => {id: field_newsletter_enabled_at.id, values: [enabled_at]},
-      :mailchimp_member_id => {id: field_member_id.id, values: [member_id]}
-    }
-
-    set_field_values(values_to_save)
   end
 end
 
