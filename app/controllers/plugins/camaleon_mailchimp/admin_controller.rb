@@ -1,4 +1,4 @@
-class Plugins::CamaleonMailchimp::AdminController < Apps::PluginsAdminController
+class Plugins::CamaleonMailchimp::AdminController < CamaleonCms::Apps::PluginsAdminController
   include Plugins::CamaleonMailchimp::MainHelper
 
   def settings

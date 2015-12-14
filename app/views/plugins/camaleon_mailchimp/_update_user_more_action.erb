@@ -31,7 +31,7 @@
       </div>
       <div class="modal-body">
         <p><%= t('plugin.mailchimp.modal.subscribe.body') %></p>
-        <%= form_for @user, url: @user.new_record? ? admin_users_path : admin_plugins_camaleon_mailchimp_subscribe_path(@user), html: {class: 'form-ajax-mailchimp-subscribe'} do |f| %>
+        <%= form_for @user, url: @user.new_record? ? cama_admin_users_path : admin_plugins_camaleon_mailchimp_subscribe_path(@user), html: {class: 'form-ajax-mailchimp-subscribe'} do |f| %>
             <div class="modal-body form-horizontal form-group-separated">
               <div class="modal-footer">
                 <button type="submit" class="btn btn-danger mailchimp-subscribe-btn"><%= t('plugin.mailchimp.modal.subscribe.submit') %></button>
@@ -55,7 +55,7 @@
       </div>
       <div class="modal-body">
         <p><%= t('plugin.mailchimp.modal.unsubscribe.body') %></p>
-        <%= form_for @user, url: @user.new_record? ? admin_users_path : admin_plugins_camaleon_mailchimp_unsubscribe_path(@user), html: {class: 'form-ajax-mailchimp-unsubscribe'} do |f| %>
+        <%= form_for @user, url: @user.new_record? ? cama_admin_users_path : admin_plugins_camaleon_mailchimp_unsubscribe_path(@user), html: {class: 'form-ajax-mailchimp-unsubscribe'} do |f| %>
             <div class="modal-body form-horizontal form-group-separated">
               <div class="modal-footer">
                 <button type="submit" class="btn btn-danger"><%= t('plugin.mailchimp.modal.unsubscribe.submit') %></button>
@@ -85,7 +85,7 @@
         } else {
           $.fn.alert({title: res.message.msg, close: res.message.close});
           $("#modal_plugin_mailchimp_subscribe").modal('hide');
-          window.location.href = '<%= admin_users_path %>';
+          window.location.href = '<%= cama_admin_users_path %>';
         }
       }
     });
@@ -103,7 +103,7 @@
         } else {
           $.fn.alert({title: res.message.msg, close: res.message.close});
           $("#modal_plugin_mailchimp_unsubscribe").modal('hide');
-          window.location.href = '<%= admin_users_path %>';
+          window.location.href = '<%= cama_admin_users_path %>';
         }
       }
     });

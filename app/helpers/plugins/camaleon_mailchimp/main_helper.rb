@@ -48,14 +48,14 @@ module Plugins::CamaleonMailchimp::MainHelper
     extra_data[:list_id]
     extra_data[:email]
     if extra_data[:list_id] == the_mailchimp_list_id
-      user = User.find_by_email(extra_data[:email])
+      user = CamaleonCms::User.find_by_email(extra_data[:email])
       user.update_mailchimp_values(1, subscription_date, '')
     end
   end
 
   def unsubscribe_hook(hook_data)
     extra_data = hook_data[:data]
-    user = User.find_by_email(extra_data[:email])
+    user = CamaleonCms::User.find_by_email(extra_data[:email])
     user.mailchimp_unsubscribe!(extra_data[:list_id]) unless user.nil?
   end
 
@@ -72,7 +72,7 @@ module Plugins::CamaleonMailchimp::MainHelper
   private
 
   def generate_custom_field_newsletter
-    group = User.first.get_user_field_groups(current_site).where({slug: 'plugin_mailchimp_user_data'})
+    group = CamaleonCms::User.first.get_user_field_groups(current_site).where({slug: 'plugin_mailchimp_user_data'})
     unless group.present?
       new_group = group.create({name: 'Mailchimp user data', slug: 'plugin_mailchimp_user_data', description: 'Mailchimp newsletter user subscription data'})
       new_group.add_field({:name => "t('plugin.mailchimp.user.newsletter_subscribed')", :slug => 'mailchimp_newsletter_subscribed'}, {field_key: 'checkbox', default_value: false})

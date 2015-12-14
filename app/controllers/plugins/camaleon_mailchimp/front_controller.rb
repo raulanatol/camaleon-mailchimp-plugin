@@ -1,4 +1,4 @@
-class Plugins::CamaleonMailchimp::FrontController < Apps::PluginsFrontController
+class Plugins::CamaleonMailchimp::FrontController < CamaleonCms::Apps::PluginsFrontController
   include Plugins::CamaleonMailchimp::MainHelper
 
   skip_before_action :verify_authenticity_token

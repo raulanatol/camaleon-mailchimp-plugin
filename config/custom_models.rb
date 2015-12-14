@@ -1,6 +1,6 @@
 require 'gibbon'
 # Extending User Model to add newsletter attributes
-User.class_eval do
+CamaleonCms::User.class_eval do
 
   def the_newsletter_subscribed?
     self.get_field_value('mailchimp_newsletter_subscribed').to_s.to_bool
